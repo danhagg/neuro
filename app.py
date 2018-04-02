@@ -19,7 +19,68 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return 'home_page'
+    colormap = {'setosa': 'red', 'versicolor': 'green', 'virginica': 'blue'}
+    colors = [colormap[x] for x in flowers['species']]
+
+    p = figure(title="Iris Morphology")
+    p.xaxis.axis_label = 'Petal Length'
+    p.yaxis.axis_label = 'Petal Width'
+
+    p.circle(
+        flowers["petal_length"],
+        flowers["petal_width"],
+        color=colors,
+        fill_alpha=0.2,
+        size=10)
+
+    # grab the static resources
+    js_resources = INLINE.render_js()
+    css_resources = INLINE.render_css()
+
+    # render template
+    script, div = components(p)
+    html = render_template(
+        'index.html',
+        plot_script=script,
+        plot_div=div,
+        js_resources=js_resources,
+        css_resources=css_resources,
+    )
+    return encode_utf8(html)
+    return render_template('index.html')
+
+
+@app.route('/echarts')
+def echarts():
+
+    colormap = {'setosa': 'red', 'versicolor': 'green', 'virginica': 'blue'}
+    colors = [colormap[x] for x in flowers['species']]
+
+    p = figure(title="Iris Morphology")
+    p.xaxis.axis_label = 'Petal Length'
+    p.yaxis.axis_label = 'Petal Width'
+
+    p.circle(
+        flowers["petal_length"],
+        flowers["petal_width"],
+        color=colors,
+        fill_alpha=0.2,
+        size=10)
+
+    # grab the static resources
+    js_resources = INLINE.render_js()
+    css_resources = INLINE.render_css()
+
+    # render template
+    script, div = components(p)
+    html = render_template(
+        'echarts.html',
+        plot_script=script,
+        plot_div=div,
+        js_resources=js_resources,
+        css_resources=css_resources,
+    )
+    return encode_utf8(html)
 
 
 @app.route('/iris')
